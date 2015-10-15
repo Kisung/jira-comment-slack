@@ -1,66 +1,80 @@
 # 1.Overview
 ----
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-38-19.png)
-- 1.JIRA 이슈에 Comment가 등록/수정시 Webhook 설정에 등록된 URL로 POST 호출을 한다.
-- 2.Flask로 구성된 REST API에서는 Post를 통해 들어온 JSON을 파싱하여 Slack API를 호출한다.
-- 3.Slack Incoming WebHooks에 설정된 채널로 메세지를 전송한다.
+![alt tag](resource/image2015-9-16%2013-38-19.png)
+- 1.JIRA 's comment-update event can be sent by `Webhook` via a `POST` request
+- 2.Flask works as a proxy that get events from JIRA then send it to slack(in json format)
+- 3.Slack Incoming WebHooks will handler the request and output in slack channel
 
-
+Find me at [github-repo](https://github.com/smartxworks/jira-comment-slack)
+Find original repo at [original-repo](https://github.com/Kisung/jira-comment-slack)
 
 # 2. Environment
 ----
-## 1.Slack Incoming Webhooks 설정
-- Slack > Integrations 설정 화면 하단의 DIY Integrations & Customizations에 있는 Incoming Webhooks의 View 버튼을 클릭한다.
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-37-36.png)
+## 1. Create Slack Incoming Webhooks info
+- Slack > Configure Integrations > Incoming Webhooks> View
+![alt tag](resource/image2015-9-16%2013-37-36.png)
 
 
-- 메세지를 게시할 채널을 선택하고 "Add Incoming WebHooks Integration"버튼을 클릭하여 Hook을 생성한다.
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-40-30.png) 
+- Then click "Add Incoming WebHooks Integration" and create a Webhooks to a channel
+![alt tag](resource/image2015-9-16%2013-40-30.png) 
 
 
-- 상세 설정을 하고 자동 생성된 "Webhook URL"을 복사해둔다.
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-43-23.png)
+- You will get a Webhooks url, **copy it** and then we will use it  
+![alt tag](resource/image2015-9-16%2013-43-23.png)
 
 
-## 2. API Server 개발
-개발 환경
+## 2. API Server Configuration
+Requires:
 
-> python 2.7
+> python 2.6 +
 
 > flask 0.10.1
 
-> AWS ELB + Ubuntu 14.04 EC2
+Then run following command in shell.
+
+```bash
+# setup
+python setup.py
+
+# configure
+cp jira_comment_slack.conf.json.example /etc/jira_comment_slack.conf.json
+vim /etc/jira_comment_slack.conf.json
+#{
+#  "slack_url": "https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/zzzzzzzzzzzzzzzzzzzzzzzz",
+#  "channel": "#random",
+#  "port": 11000   # the flask server port
+#}
+
+# run server
+/usr/bin/jira-comment-slack-server
+```
+
+## 3. JIRA Webhook Settings
+- JIRA > System Menu
+![alt tag](resource/image2015-9-16%2013-44-59.png)
+
+- Find the "WebHooks" setting
+![alt tag](resource/image2015-9-16%2013-45-50.png)
+
+- Click "Create WebHook" to create a new webhook
+- Enter the name and Enter the **url** where our flask app running, just like `http://host:port/webhook`
+- Events should be set to "Issue : updated"
+![alt tag](resource/image2015-9-16%2013-49-17.png)
 
 
-## 3. JIRA Webhook 설정
-- JIRA > System 설정 페이지로 이동
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-44-59.png)
-
-- 좌측메뉴 하단의 "WebHooks" 메뉴 클릭
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-45-50.png)
-
-- 화면 우측 상단의 "Create WebHook" 버튼을 클릭하여 신규 WebHook 생성 페이지로 이동.
-- URL 항목에는 Flask로 구성한 API URL을 등록한다.
-- Events 항목은 "Issue : updated"를 선택한다.
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-49-17.png)
-
-
-# 3.Work
+# 3.Working Example
 ----
-1.JIRA Comment 등록
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-52-42.png)
+1.JIRA Comment capture
+![alt tag](resource/image2015-9-16%2013-52-42.png)
 
 
-2.API Server Log 확인
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-53-40.png)
+2.API Server Log capture
+![alt tag](resource/image2015-9-16%2013-53-40.png)
 
 
-3.Slack Channel message 확인
-![alt tag](https://raw.githubusercontent.com/Kisung/jira-comment-slack/master/resource/image2015-9-16%2013-54-34.png)
+3.Slack Channel message capture
+![alt tag](resource/image2015-9-16%2013-54-34.png)
 
-
-4.Message 링크 확인
-메세지의 링크 클릭시 해당 이슈의 코멘트로 포커싱 되는것을 확인 한다.
 
 # 4.link
 ----
@@ -69,7 +83,6 @@ Slack Attachments - https://api.slack.com/docs/attachments
 flask - flask.pocoo.org
 
 JIRA Webhook - https://developer.atlassian.com/jiradev/jira-architecture/webhooks
-
 
 
 

@@ -1,0 +1,5 @@
+{
+  "slack_url": "https://hooks.slack.com/services/XXXXXXXXX/YYYYYYYYY/zzzzzzzzzzzzzzzzzzzzzzzz",
+  "channel": "#random",
+  "port": 11000
+}
