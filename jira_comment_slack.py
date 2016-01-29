@@ -12,11 +12,14 @@ app = Flask(__name__)
 
 try:
     config = json.load(open('/etc/jira_comment_slack.conf.json', 'r'))
+    # Mandatory settings
     slack_url = config['slack_url']
     slack_channel = config['channel']
+
+    # Optional settings
     slack_post = config.get('slack_post', True)
     flask_host = config.get('host', '127.0.0.1')
-    flask_port = config['port']
+    flask_port = config.get('port', 11000)
     flask_logfile = config.get('logfile', None)
     flask_logaddress = config.get('syslog_address', '/dev/log')
     flask_debug = config.get('debug', False)
