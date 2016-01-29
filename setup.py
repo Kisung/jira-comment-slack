@@ -8,11 +8,11 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 setup(
     name='jira-comment-slack',
-    version='0.1',
+    version='0.2',
     url='https://github.com/smartxworks/jira-comment-slack',
     license='MIT',
-    author='SmartXWorks/Kisung',
-    description='Send JIRA comment update to slack channel',
+    author='willharris/SmartXWorks/Kisung',
+    description='Send JIRA comment updates to a Slack channel',
     long_description=__doc__,
     py_modules=["jira_comment_slack"],
     zip_safe=False,
