@@ -134,7 +134,13 @@ If you have changed the configuration of the host or port, adapt this URL to use
 ![slack sample comment](resource/slack-sample-comment.png)
 
 
-# 4. Documentation / Links
+# 6. Docker
+
+```
+docker run -d --env-file ./env.list -p 11000:11000 --restart=always yewton/jira-comment-slack
+```
+
+# 7. Documentation / Links
 
 * Slack Attachments --
   https://api.slack.com/docs/attachments
